@@ -34,7 +34,7 @@ function GameBoard() {
 }
 
 function Cell() {
-  let value = "0";
+  let value = 0;
   const addToken = (player) => (value = player);
 
   const getValue = () => value;
@@ -44,14 +44,14 @@ function Cell() {
 
 function GameController(PlayerOne = "Yellow", PlayerTwo = "Red") {
   const board = GameBoard();
-  const Players = [
+  const players = [
     { name: PlayerOne, token: 1 },
     { name: PlayerTwo, token: 2 },
   ];
 
-  let activePlayer = Players[0];
+  let activePlayer = players[0];
   const switchPlayerTurn = () =>
-    (activePlayer = activePlayer === Players[0] ? Players[1] : Players[0]);
+    (activePlayer = activePlayer === players[0] ? players[1] : players[0]);
 
   const getActivePlayer = () => activePlayer;
 
@@ -70,7 +70,55 @@ function GameController(PlayerOne = "Yellow", PlayerTwo = "Red") {
   };
 
   printNewRound();
-  return { playRound, getActivePlayer };
+  return { playRound, getActivePlayer, getBoard: board.getBoard };
 }
 
-const game = GameBoard();
+function ScreenController() {
+  const game = GameController();
+  const boardDiv = document.querySelector(".board");
+  const message = document.querySelector(".message");
+
+  const updateScreen = () => {
+    boardDiv.textContent = "";
+    message.textContent = "";
+
+    const board = game.getBoard();
+    const activePlayer = game.getActivePlayer();
+
+    message.textContent = `${activePlayer.name}'s turn.....`;
+
+    //it will change the content inside cells
+    function playerColor(cellValue) {
+      if (cellValue === 1) {
+        return "yellow";
+      } else if (cellValue === 2) {
+        return "red";
+      }
+      return "yellow";
+    }
+
+    board.forEach((row) => {
+      row.forEach((cell, index) => {
+        const cellButton = document.createElement("button");
+        cellButton.classList.add("cell");
+
+        cellButton.dataset.column = index;
+        cellButton.textContent = cell.getValue();
+        cellButton.style.backgroundColor = playerColor(cell.getValue());
+        boardDiv.appendChild(cellButton);
+      });
+    });
+  };
+  function ClickHandlerBoard(e) {
+    const selectedColumn = e.target.dataset.column;
+
+    if (!selectedColumn) return;
+    game.playRound(selectedColumn);
+    updateScreen();
+  }
+
+  boardDiv.addEventListener("click", ClickHandlerBoard);
+  updateScreen();
+}
+
+ScreenController();

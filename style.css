@@ -1,0 +1,32 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  text-align: center;
+}
+.board {
+  margin: auto;
+  padding: 10px;
+  display: grid;
+  gap: 5px;
+  grid-template-columns: repeat(7, 1fr);
+  grid-template-rows: repeat(6, 1fr);
+  min-height: 500px;
+  max-width: 500px;
+  border: 10px solid rgb(1, 1, 110);
+  background-color: blue;
+}
+
+.message {
+  margin: 30px;
+}
+
+.cell {
+  border: 10px solid rgb(1, 1, 110);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 100%;
+}
