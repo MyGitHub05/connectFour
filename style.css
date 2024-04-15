@@ -31,3 +31,22 @@ body {
   border-radius: 100%;
   cursor: pointer;
 }
+
+.reset {
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  border: none;
+  background-color: rgb(197, 4, 4);
+  color: aliceblue;
+  transition: 0.2s ease-in-out;
+}
+.reset:hover {
+  background-color: red;
+}
+
+.reset:active {
+  background-color: green;
+}

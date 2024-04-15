@@ -156,9 +156,10 @@ function GameController(PlayerOne = "Yellow", PlayerTwo = "Red") {
 }
 
 function ScreenController() {
-  const game = GameController();
+  let game = GameController();
   const boardDiv = document.querySelector(".board");
   const message = document.querySelector(".message");
+  const reset = document.querySelector(".reset");
   //it will change the content inside cells
   function playerColor(cellValue) {
     if (cellValue === 1) {
@@ -173,6 +174,14 @@ function ScreenController() {
     boardDiv.addEventListener("click", () =>
       alert(`The game has ended ${game.getActivePlayer().name} won`)
     );
+  }
+  function resetGame() {
+    boardDiv.innerHTML = "";
+    message.textContent = "";
+    // Re-initialize the game
+    game = GameController();
+    // Update the screen to display the initial state
+    updateScreen();
   }
 
   const updateScreen = () => {
@@ -211,6 +220,7 @@ function ScreenController() {
   }
 
   boardDiv.addEventListener("click", ClickHandlerBoard);
+  reset.addEventListener("click", resetGame);
   updateScreen();
 }
 
