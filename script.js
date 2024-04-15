@@ -15,11 +15,12 @@ function GameBoard() {
 
   const dropToken = (column, player) => {
     const availableCells = board
-      .filter((row) => row[column] === "0")
+      .filter((row) => row[column].getValue() === 0)
       .map((row) => row[column]);
 
     if (!availableCells.length) return;
     const lowestRow = availableCells.length - 1;
+    board[lowestRow][column].addToken(player);
   };
 
   const printBoard = () => {
@@ -35,7 +36,9 @@ function GameBoard() {
 
 function Cell() {
   let value = 0;
-  const addToken = (player) => (value = player);
+  const addToken = (player) => {
+    value = player;
+  };
 
   const getValue = () => value;
 
@@ -50,8 +53,9 @@ function GameController(PlayerOne = "Yellow", PlayerTwo = "Red") {
   ];
 
   let activePlayer = players[0];
-  const switchPlayerTurn = () =>
-    (activePlayer = activePlayer === players[0] ? players[1] : players[0]);
+  const switchPlayerTurn = () => {
+    activePlayer = activePlayer === players[0] ? players[1] : players[0];
+  };
 
   const getActivePlayer = () => activePlayer;
 
@@ -64,7 +68,7 @@ function GameController(PlayerOne = "Yellow", PlayerTwo = "Red") {
     console.log(
       `Dropping ${getActivePlayer().name}'s token into column ${column}`
     );
-    board.dropToken(column, getActivePlayer().name);
+    board.dropToken(column, getActivePlayer().token);
     switchPlayerTurn();
     printNewRound();
   };
@@ -94,7 +98,7 @@ function ScreenController() {
       } else if (cellValue === 2) {
         return "red";
       }
-      return "yellow";
+      return "white";
     }
 
     board.forEach((row) => {
@@ -103,7 +107,7 @@ function ScreenController() {
         cellButton.classList.add("cell");
 
         cellButton.dataset.column = index;
-        cellButton.textContent = cell.getValue();
+        //cellButton.textContent = cell.getValue();
         cellButton.style.backgroundColor = playerColor(cell.getValue());
         boardDiv.appendChild(cellButton);
       });
