@@ -13,6 +13,9 @@ function GameBoard() {
 
   const getBoard = () => board;
 
+  const getRows = () => rows;
+  const getCols = () => cols;
+
   const dropToken = (column, player) => {
     const availableCells = board
       .filter((row) => row[column].getValue() === 0)
@@ -31,7 +34,7 @@ function GameBoard() {
     console.log(boardWithCellValues);
   };
 
-  return { getBoard, dropToken, printBoard };
+  return { getBoard, dropToken, printBoard, getRows, getCols };
 }
 
 function Cell() {
@@ -64,11 +67,81 @@ function GameController(PlayerOne = "Yellow", PlayerTwo = "Red") {
     console.log(`${getActivePlayer().name}'s turn`);
   };
 
+  const checkingWinningCombination = () => {
+    //check vertical
+    for (let i = 0; i < board.getRows() - 3; i++) {
+      for (let j = 0; j < board.getCols(); j++) {
+        if (
+          board.getBoard()[i][j].getValue() === getActivePlayer().token &&
+          board.getBoard()[i + 1][j].getValue() === getActivePlayer().token &&
+          board.getBoard()[i + 2][j].getValue() === getActivePlayer().token &&
+          board.getBoard()[i + 3][j].getValue() === getActivePlayer().token
+        ) {
+          return true;
+        }
+      }
+    }
+
+    //check for horizontal
+    for (let i = 0; i < board.getRows(); i++) {
+      for (let j = 0; j < board.getCols() - 3; j++) {
+        if (
+          board.getBoard()[i][j].getValue() === getActivePlayer().token &&
+          board.getBoard()[i][j + 1].getValue() === getActivePlayer().token &&
+          board.getBoard()[i][j + 2].getValue() === getActivePlayer().token &&
+          board.getBoard()[i][j + 3].getValue() === getActivePlayer().token
+        ) {
+          return true;
+        }
+      }
+    }
+
+    // check for diagonal \
+    for (let i = 0; i < board.getRows() - 3; i++) {
+      for (let j = 0; j < board.getCols(); j++) {
+        if (
+          board.getBoard()[i][j].getValue() === getActivePlayer().token &&
+          board.getBoard()[i + 1][j + 1].getValue() ===
+            getActivePlayer().token &&
+          board.getBoard()[i + 2][j + 2].getValue() ===
+            getActivePlayer().token &&
+          board.getBoard()[i + 3][j + 3].getValue() === getActivePlayer().token
+        ) {
+          return true;
+        }
+      }
+    }
+
+    // check for diagonal /
+    for (let i = 0; i < board.getRows() - 3; i++) {
+      for (let j = 0; j < board.getCols(); j++) {
+        if (
+          board.getBoard()[i][j].getValue() === getActivePlayer().token &&
+          board.getBoard()[i + 1][j - 1].getValue() ===
+            getActivePlayer().token &&
+          board.getBoard()[i + 2][j - 2].getValue() ===
+            getActivePlayer().token &&
+          board.getBoard()[i + 3][j - 3].getValue() === getActivePlayer().token
+        ) {
+          return true;
+        }
+      }
+    }
+    return false;
+  };
+
   const playRound = (column) => {
     console.log(
       `Dropping ${getActivePlayer().name}'s token into column ${column}`
     );
     board.dropToken(column, getActivePlayer().token);
+
+    // check winners
+    if (checkingWinningCombination()) {
+      console.log(`${activePlayer.name} is the Winner`);
+      return;
+    }
+
     switchPlayerTurn();
     printNewRound();
   };
