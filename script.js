@@ -147,7 +147,12 @@ function GameController(PlayerOne = "Yellow", PlayerTwo = "Red") {
   };
 
   printNewRound();
-  return { playRound, getActivePlayer, getBoard: board.getBoard };
+  return {
+    playRound,
+    getActivePlayer,
+    getBoard: board.getBoard,
+    checkingWinningCombination,
+  };
 }
 
 function ScreenController() {
@@ -155,14 +160,25 @@ function ScreenController() {
   const boardDiv = document.querySelector(".board");
   const message = document.querySelector(".message");
 
+  function endGame() {
+    boardDiv.removeEventListener("click", ClickHandlerBoard);
+    alert("The game has ended. Further clicks won't have any effect.");
+  }
+
   const updateScreen = () => {
     boardDiv.textContent = "";
     message.textContent = "";
 
     const board = game.getBoard();
     const activePlayer = game.getActivePlayer();
+    const winner = game.checkingWinningCombination();
 
-    message.textContent = `${activePlayer.name}'s turn.....`;
+    if (winner) {
+      message.textContent = `${activePlayer.name} Wins!`;
+      endGame(); // Call the endGame function if there's a winner
+    } else {
+      message.textContent = `${activePlayer.name}'s turn.....`;
+    }
 
     //it will change the content inside cells
     function playerColor(cellValue) {
